@@ -1,0 +1,8 @@
+{
+  "name": "n8n Automation Mastery",
+  "description": "A modern squeeze page designed for lead generation, focusing on translating visitors into subscribers for an n8n automation course.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

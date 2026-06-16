@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { 
   ArrowRight, 
@@ -15,7 +15,8 @@ import {
   User,
   Phone,
   Workflow,
-  ChevronDown
+  ChevronDown,
+  Timer
 } from 'lucide-react';
 
 export default function App() {
@@ -26,6 +27,21 @@ export default function App() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [timeLeft, setTimeLeft] = useState(3600); // 1 hour in seconds
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const formatTime = (seconds: number) => {
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = seconds % 60;
+    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -149,24 +165,39 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#0A0A0B] text-slate-50 font-sans selection:bg-brand-500/30 selection:text-brand-200">
-      {/* Top Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0A0A0B]/80 backdrop-blur-md border-b border-white/5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 rounded bg-brand-500 flex items-center justify-center">
-              <Workflow className="w-5 h-5 text-white" />
+      <div className="sticky top-0 z-[60]">
+        {/* Urgency Banner */}
+        <div className="bg-brand-500 text-white text-sm font-medium py-2 px-4 shadow-[0_0_15px_rgba(255,109,90,0.5)]">
+          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-4">
+            <div className="flex items-center space-x-2 text-center">
+              <Timer className="w-4 h-4 shrink-0" />
+              <span><strong className="font-bold">Limited Offer:</strong> Claim your workspace now to get all 10,000+ templates free!</span>
             </div>
-            <span className="font-display font-bold text-xl tracking-tight text-white">Automation Stack</span>
+            <div className="bg-black/20 px-3 py-1 rounded-full font-mono text-sm tracking-widest font-semibold shrink-0">
+              {formatTime(timeLeft)}
+            </div>
           </div>
-          <button 
-            onClick={scrollToForm}
-            className="hidden sm:flex items-center space-x-2 text-sm font-medium text-white hover:text-brand-400 transition-colors"
-          >
-            <span>Claim Workspace</span>
-            <ArrowRight className="w-4 h-4" />
-          </button>
         </div>
-      </nav>
+
+        {/* Top Navigation */}
+        <nav className="bg-[#0A0A0B]/80 backdrop-blur-md border-b border-white/5">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 rounded bg-brand-500 flex items-center justify-center">
+                <Workflow className="w-5 h-5 text-white" />
+              </div>
+              <span className="font-display font-bold text-xl tracking-tight text-white">Automation Stack</span>
+            </div>
+            <button 
+              onClick={scrollToForm}
+              className="hidden sm:flex items-center space-x-2 text-sm font-medium text-white hover:text-brand-400 transition-colors"
+            >
+              <span>Claim Workspace</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+        </nav>
+      </div>
 
       {/* Background ambient glow effect */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
@@ -174,7 +205,7 @@ export default function App() {
         <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-brand-600/10 blur-[120px]" />
       </div>
 
-      <main className="relative pt-24 pb-16 lg:pt-32 lg:pb-20">
+      <main className="relative pt-12 pb-16 lg:pt-20 lg:pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-start">
             

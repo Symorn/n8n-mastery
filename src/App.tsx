@@ -49,6 +49,9 @@ export default function App() {
     
     setIsSubmitting(true);
     try {
+      if (typeof (window as any).fbq === 'function') {
+        (window as any).fbq('track', 'Lead');
+      }
       await fetch('https://automate.chatmixo.com/webhook/n8n-chatmixo', {
         method: 'POST',
         headers: {
@@ -71,6 +74,9 @@ export default function App() {
   };
 
   const scrollToForm = () => {
+    if (typeof (window as any).fbq === 'function') {
+      (window as any).fbq('track', 'ViewContent');
+    }
     document.getElementById('capture-form')?.scrollIntoView({ behavior: 'smooth' });
   };
 
@@ -176,6 +182,14 @@ export default function App() {
     {
       question: "Will I be able to connect my own external apps and APIs?",
       answer: "Absolutely. With n8n, you have comprehensive webhook support, the ability to make raw HTTP requests, and access to hundreds of native integrations out of the box."
+    },
+    {
+      question: "Can I cancel my subscription anytime?",
+      answer: "Yes, you can cancel your subscription at any time without any cancellation fees. You will continue to have access to your workspace until the end of your billing cycle."
+    },
+    {
+      question: "What happens to my data and workflows if I cancel?",
+      answer: "If you decide to cancel, you can easily export all your workflows as JSON files. You maintain full ownership of your data and can import your workflows into any other n8n instance in the future."
     }
   ];
 

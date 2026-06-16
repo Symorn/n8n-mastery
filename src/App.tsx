@@ -49,7 +49,7 @@ export default function App() {
     
     setIsSubmitting(true);
     try {
-      await fetch('https://automate.chatmixo.com/webhook-test/n8n-chatmixo', {
+      await fetch('https://automate.chatmixo.com/webhook/n8n-chatmixo', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -155,11 +155,27 @@ export default function App() {
     },
     {
       question: "How does the billing work? Are there any hidden fees?",
-      answer: "It's a flat rate of ₦12,000 per month. That's it. Unlike other platforms that charge per execution or task, our pricing includes unlimited workflows and executions. You won't face any surprise overages as your automations scale."
+      answer: "It's a flat rate of ₦15,000 per month. That's it. Unlike other platforms that charge per execution or task, our pricing includes unlimited workflows and executions. You won't face any surprise overages as your automations scale."
     },
     {
       question: "Can I manage everything myself without coding skills?",
       answer: "Yes! While n8n is incredibly powerful for developers, its visual interface means you don't need to write a single line of code to build complex automations. Just drag, drop, and connect the nodes."
+    },
+    {
+      question: "Do you offer a free trial?",
+      answer: "While we don't offer a free trial, your investment is fully protected by our 7-Day Money-Back Guarantee. Try your managed workspace for a full week, and if it's not the right fit, we will refund your workspace fee."
+    },
+    {
+      question: "What if I get stuck while building a workflow?",
+      answer: "We offer technical support and troubleshooting as part of your subscription to ensure you never get blocked. Plus, with over 10,000 templates ready to use, chances are the workflow you need is already built."
+    },
+    {
+      question: "How soon do I get access to my workspace?",
+      answer: "Setup is completely automated and instant. Once you submit your application and complete your subscription, you'll receive an email with your dedicated n8n workspace credentials."
+    },
+    {
+      question: "Will I be able to connect my own external apps and APIs?",
+      answer: "Absolutely. With n8n, you have comprehensive webhook support, the ability to make raw HTTP requests, and access to hundreds of native integrations out of the box."
     }
   ];
 
@@ -230,7 +246,7 @@ export default function App() {
               </h1>
               
               <p className="text-lg lg:text-xl text-slate-400 leading-relaxed max-w-2xl font-light">
-                Get your own managed n8n workspace, unlimited executions, 10,000+ workflow templates, and zero server headaches for just <strong className="text-white font-medium">₦12,000/month</strong>.
+                Get your own managed n8n workspace, unlimited executions, 10,000+ workflow templates, and zero server headaches for just <strong className="text-white font-medium">₦15,000/month</strong>.
               </p>
 
               <button 
@@ -262,7 +278,6 @@ export default function App() {
 
             {/* Right Column: Lead Capture Form */}
             <motion.div 
-              id="capture-form"
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, delay: 0.2 }}
@@ -274,11 +289,11 @@ export default function App() {
                 {!isSubmitted ? (
                   <>
                     <div className="mb-8">
-                      <h3 className="text-3xl font-display font-bold text-white mb-3">
+                      <h3 id="capture-form" className="text-3xl font-display font-bold text-white mb-3 scroll-mt-[120px]">
                         Claim Your Workspace
                       </h3>
                       <p className="text-slate-400 text-sm">
-                        Enter your details below to claim your managed workspace for ₦12,000/month.
+                        Enter your details below to claim your managed workspace for ₦15,000/month.
                       </p>
                     </div>
 
@@ -357,15 +372,21 @@ export default function App() {
                           <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
                         ) : (
                           <span className="flex items-center space-x-2">
-                            <span>Get Access for ₦12,000/mo</span>
+                            <span>Get Access for ₦15,000/mo</span>
                             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                           </span>
                         )}
                       </button>
                       
-                      <div className="flex items-center justify-center space-x-2 mt-4 text-xs text-slate-500 text-center">
-                        <Lock className="w-3 h-3" />
-                        <span>Secure registration. We respect your privacy.</span>
+                      <div className="flex flex-col items-center justify-center space-y-3 mt-5">
+                        <div className="inline-flex items-center space-x-1.5 bg-emerald-500/10 text-emerald-400 px-3 py-1.5 rounded-full text-xs font-medium border border-emerald-500/20">
+                          <ShieldCheck className="w-3.5 h-3.5" />
+                          <span>7-Day Money-Back Guarantee</span>
+                        </div>
+                        <div className="flex items-center space-x-2 text-xs text-slate-500 text-center">
+                          <Lock className="w-3 h-3" />
+                          <span>Secure registration. We respect your privacy.</span>
+                        </div>
                       </div>
                     </form>
                   </>
@@ -457,7 +478,8 @@ export default function App() {
               <p className="text-slate-400 text-lg">Compare hosting options and see why this is a complete steal.</p>
             </div>
             
-            <div className="bg-[#131316] border border-white/10 rounded-3xl overflow-hidden shadow-2xl overflow-x-auto custom-scrollbar">
+            {/* Desktop Table View */}
+            <div className="hidden md:block bg-[#131316] border border-white/10 rounded-3xl overflow-hidden shadow-2xl overflow-x-auto custom-scrollbar">
               <table className="w-full text-left border-collapse min-w-[700px]">
                 <thead>
                   <tr className="bg-[#1A1A1E]">
@@ -472,7 +494,7 @@ export default function App() {
                     <td className="p-6 font-medium text-white">Monthly Price</td>
                     <td className="p-6 text-slate-400 border-l border-white/5">~$5 - $20+ <span className="text-xs block text-slate-500 mt-1">Plus domains & hidden costs</span></td>
                     <td className="p-6 text-slate-400 border-l border-white/5">~$20+ /mo</td>
-                    <td className="p-6 text-brand-300 font-bold border-l border-white/5 bg-brand-500/[0.02]">₦12,000 /mo <span className="text-xs font-medium block text-brand-400/80 mt-1">Flat predictable rate</span></td>
+                    <td className="p-6 text-brand-300 font-bold border-l border-white/5 bg-brand-500/[0.02]">₦15,000 /mo <span className="text-xs font-medium block text-brand-400/80 mt-1">Flat predictable rate</span></td>
                   </tr>
                   <tr className="hover:bg-white/[0.02] transition-colors">
                     <td className="p-6 font-medium text-white">Workflow Executions</td>
@@ -528,6 +550,172 @@ export default function App() {
                   </tr>
                 </tbody>
               </table>
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="md:hidden space-y-6">
+              {/* DIY VPS Card */}
+              <div className="bg-[#131316] border border-white/10 rounded-2xl p-5 shadow-lg">
+                <div className="border-b border-white/10 pb-4 mb-4">
+                  <h3 className="text-xl font-display font-bold text-white">DIY VPS</h3>
+                  <p className="text-sm text-slate-400">(Hostinger, DigitalOcean)</p>
+                </div>
+                <ul className="space-y-4">
+                  <li className="flex justify-between items-start">
+                    <span className="text-slate-400 text-sm font-medium pr-4 mt-0.5">Monthly Price</span>
+                    <div className="text-right flex-1">
+                      <span className="text-white text-sm">~$5 - $20+</span>
+                      <span className="text-xs block text-slate-500 mt-0.5">Plus domains & costs</span>
+                    </div>
+                  </li>
+                  <li className="flex justify-between items-start">
+                    <span className="text-slate-400 text-sm font-medium pr-4 mt-0.5">Executions</span>
+                    <div className="text-right flex-1">
+                      <span className="text-white text-sm">Unlimited</span>
+                      <span className="text-xs block text-slate-500 mt-0.5">If server stays up</span>
+                    </div>
+                  </li>
+                  <li className="flex justify-between items-start">
+                    <span className="text-slate-400 text-sm font-medium pr-4 mt-0.5">Server Mgmt</span>
+                    <div className="text-right flex-1 flex flex-col items-end">
+                      <span className="flex items-center text-red-400/80 text-sm"><XCircle className="w-4 h-4 mr-1.5 shrink-0" /> You configure</span>
+                      <span className="text-xs block text-slate-500 mt-0.5">Docker & Linux</span>
+                    </div>
+                  </li>
+                  <li className="flex justify-between items-start">
+                    <span className="text-slate-400 text-sm font-medium pr-4 mt-0.5">SSL & Updates</span>
+                    <div className="text-right flex-1 flex items-center justify-end text-red-400/80 text-sm">
+                      <XCircle className="w-4 h-4 mr-1.5 shrink-0" /> DIY maintenance
+                    </div>
+                  </li>
+                  <li className="flex justify-between items-start">
+                    <span className="text-slate-400 text-sm font-medium pr-4 mt-0.5">Setup Time</span>
+                    <div className="text-right flex-1 text-white text-sm">
+                      Hours / Days
+                    </div>
+                  </li>
+                  <li className="flex justify-between items-start">
+                    <span className="text-slate-400 text-sm font-medium pr-4 mt-0.5">Templates</span>
+                    <div className="text-right flex-1 text-slate-400 text-sm">
+                      Manual import
+                    </div>
+                  </li>
+                  <li className="flex justify-between items-start">
+                    <span className="text-slate-400 text-sm font-medium pr-4 mt-0.5">Support</span>
+                    <div className="text-right flex-1 text-slate-400 text-sm">
+                      Google Search & Forums
+                    </div>
+                  </li>
+                </ul>
+              </div>
+
+              {/* n8n Cloud Card */}
+              <div className="bg-[#131316] border border-white/10 rounded-2xl p-5 shadow-lg">
+                <div className="border-b border-white/10 pb-4 mb-4">
+                  <h3 className="text-xl font-display font-bold text-white">n8n Cloud</h3>
+                  <p className="text-sm text-slate-400">(Official)</p>
+                </div>
+                <ul className="space-y-4">
+                  <li className="flex justify-between items-start">
+                    <span className="text-slate-400 text-sm font-medium pr-4 mt-0.5">Monthly Price</span>
+                    <div className="text-right flex-1">
+                      <span className="text-white text-sm">~$20+ /mo</span>
+                    </div>
+                  </li>
+                  <li className="flex justify-between items-start">
+                    <span className="text-slate-400 text-sm font-medium pr-4 mt-0.5">Executions</span>
+                    <div className="text-right flex-1">
+                      <span className="text-white text-sm">Strict Limits</span>
+                      <span className="text-xs block text-slate-500 mt-0.5">Expensive overages</span>
+                    </div>
+                  </li>
+                  <li className="flex justify-between items-start">
+                    <span className="text-slate-400 text-sm font-medium pr-4 mt-0.5">Server Mgmt</span>
+                    <div className="text-right flex-1 flex items-center justify-end text-emerald-400/80 text-sm">
+                      <CheckCircle2 className="w-4 h-4 mr-1.5 shrink-0" /> Managed by them
+                    </div>
+                  </li>
+                  <li className="flex justify-between items-start">
+                    <span className="text-slate-400 text-sm font-medium pr-4 mt-0.5">SSL & Updates</span>
+                    <div className="text-right flex-1 flex items-center justify-end text-emerald-400/80 text-sm">
+                      <CheckCircle2 className="w-4 h-4 mr-1.5 shrink-0" /> Automatic
+                    </div>
+                  </li>
+                  <li className="flex justify-between items-start">
+                    <span className="text-slate-400 text-sm font-medium pr-4 mt-0.5">Setup Time</span>
+                    <div className="text-right flex-1 text-emerald-400 text-sm">
+                      Instant
+                    </div>
+                  </li>
+                  <li className="flex justify-between items-start">
+                    <span className="text-slate-400 text-sm font-medium pr-4 mt-0.5">Templates</span>
+                    <div className="text-right flex-1 text-slate-400 text-sm">
+                      Standard access
+                    </div>
+                  </li>
+                  <li className="flex justify-between items-start">
+                    <span className="text-slate-400 text-sm font-medium pr-4 mt-0.5">Support</span>
+                    <div className="text-right flex-1 text-slate-400 text-sm">
+                      Email tickets
+                    </div>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Our Managed Stack Card */}
+              <div className="bg-brand-500/10 border border-brand-500/30 rounded-2xl p-5 shadow-lg relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-400 to-brand-600" />
+                <div className="border-b border-brand-500/20 pb-4 mb-4">
+                  <h3 className="text-xl font-display font-bold text-brand-400">Our Managed Stack</h3>
+                  <p className="text-sm text-brand-400/70">The maximum value</p>
+                </div>
+                <ul className="space-y-4">
+                  <li className="flex justify-between items-start">
+                    <span className="text-brand-400/70 text-sm font-medium pr-4 mt-0.5">Monthly Price</span>
+                    <div className="text-right flex-1">
+                      <span className="text-brand-300 font-bold text-sm">₦15,000 /mo</span>
+                      <span className="text-[11px] font-medium block text-brand-400/80 mt-0.5">Flat predictable rate</span>
+                    </div>
+                  </li>
+                  <li className="flex justify-between items-start">
+                    <span className="text-brand-400/70 text-sm font-medium pr-4 mt-0.5">Executions</span>
+                    <div className="text-right flex-1">
+                      <span className="text-brand-300 font-bold text-sm">Unlimited</span>
+                      <span className="text-[11px] font-medium block text-brand-400/80 mt-0.5">No strings attached</span>
+                    </div>
+                  </li>
+                  <li className="flex justify-between items-start">
+                    <span className="text-brand-400/70 text-sm font-medium pr-4 mt-0.5">Server Mgmt</span>
+                    <div className="text-right flex-1 flex items-center justify-end text-brand-300 font-bold text-sm">
+                      <CheckCircle2 className="w-4 h-4 mr-1.5 shrink-0 text-brand-500" /> Fully Managed
+                    </div>
+                  </li>
+                  <li className="flex justify-between items-start">
+                    <span className="text-brand-400/70 text-sm font-medium pr-4 mt-0.5">SSL & Updates</span>
+                    <div className="text-right flex-1 flex items-center justify-end text-brand-300 font-bold text-sm">
+                      <CheckCircle2 className="w-4 h-4 mr-1.5 shrink-0 text-brand-500" /> Automatic
+                    </div>
+                  </li>
+                  <li className="flex justify-between items-start">
+                    <span className="text-brand-400/70 text-sm font-medium pr-4 mt-0.5">Setup Time</span>
+                    <div className="text-right flex-1 text-brand-300 font-bold text-sm">
+                      Instant
+                    </div>
+                  </li>
+                  <li className="flex justify-between items-start">
+                    <span className="text-brand-400/70 text-sm font-medium pr-4 mt-0.5">Templates</span>
+                    <div className="text-right flex-1 flex items-center justify-end text-brand-300 font-bold text-sm">
+                      <CheckCircle2 className="w-4 h-4 mr-1.5 shrink-0 text-brand-500" /> 10,000+ Pre-loaded
+                    </div>
+                  </li>
+                  <li className="flex justify-between items-start">
+                    <span className="text-brand-400/70 text-sm font-medium pr-4 mt-0.5">Support</span>
+                    <div className="text-right flex-1 flex items-center justify-end text-brand-300 font-bold text-sm text-right">
+                      <CheckCircle2 className="w-4 h-4 mr-1.5 shrink-0 text-brand-500" /> Priority Technical
+                    </div>
+                  </li>
+                </ul>
+              </div>
             </div>
             
             <div className="mt-12 text-center">
@@ -615,7 +803,7 @@ export default function App() {
               onClick={scrollToForm}
               className="inline-flex items-center justify-center px-10 py-5 bg-brand-500 text-white font-bold rounded-2xl transition-all hover:bg-brand-600 hover:-translate-y-1 shadow-[0_0_40px_-10px_rgba(255,109,90,0.5)] active:scale-95 text-lg"
             >
-              <span>Get the Ultimate Stack for ₦12,000</span>
+              <span>Get the Ultimate Stack for ₦15,000</span>
               <ArrowRight className="w-5 h-5 ml-2" />
             </button>
             <p className="mt-4 text-sm text-slate-500">Secure checkout. Instant access to n8n workspace.</p>

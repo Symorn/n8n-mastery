@@ -52,8 +52,13 @@ export default function App() {
       if (typeof (window as any).fbq === 'function') {
         (window as any).fbq('track', 'Lead');
       }
-      await fetch('https://automate.chatmixo.com/webhook/n8n-chatmixo', {
+      
+      // CHANGE THIS URL to your Google Apps Script Web App URL
+      const scriptUrl = 'https://script.google.com/macros/s/AKfycbz5hTWODng5HkF_e7WuvWBOVld_eoUJD7HF053BnBf1KFSgCniqvV1fRVTJBqCAECLSRQ/exec';
+      
+      await fetch(scriptUrl, {
         method: 'POST',
+        mode: 'no-cors', // Important for Google Apps Script to avoid CORS errors
         headers: {
           'Content-Type': 'application/json'
         },
@@ -64,7 +69,12 @@ export default function App() {
           phone
         })
       });
+      
       setIsSubmitted(true);
+      
+      // Redirect to a new tab (e.g. payment page or success page)
+      window.open('https://app.chatmixo.com/dashboard/pay/n8n', '_blank');
+      
     } catch (error) {
       console.error('Submission error:', error);
       setIsSubmitted(true);
@@ -216,7 +226,7 @@ export default function App() {
               <div className="w-8 h-8 rounded bg-brand-500 flex items-center justify-center">
                 <Workflow className="w-5 h-5 text-white" />
               </div>
-              <span className="font-display font-bold text-xl tracking-tight text-white">Automation Stack</span>
+              <span className="font-display font-bold text-xl tracking-tight text-white">Chatmixo N8n</span>
             </div>
             <button 
               onClick={scrollToForm}

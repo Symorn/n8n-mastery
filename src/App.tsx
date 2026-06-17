@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
+import 'react-phone-number-input/style.css';
+import PhoneInput from 'react-phone-number-input';
 import { 
   ArrowRight, 
   CheckCircle2, 
@@ -23,13 +25,24 @@ export default function App() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
+  const [phone, setPhone] = useState<any>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [timeLeft, setTimeLeft] = useState(3600); // 1 hour in seconds
+  const [defaultCountry, setDefaultCountry] = useState<any>('US');
 
   useEffect(() => {
+    // Detect country by IP
+    fetch('https://ipapi.co/json/')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.country_code) {
+          setDefaultCountry(data.country_code);
+        }
+      })
+      .catch((err) => console.log('Error fetching IP', err));
+
     const timer = setInterval(() => {
       setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
     }, 1000);
@@ -46,6 +59,9 @@ export default function App() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !firstName || !lastName || !phone) return;
+    
+    // Open the new tab immediately to bypass popup blockers
+    const newWindow = window.open('about:blank', '_blank');
     
     setIsSubmitting(true);
     try {
@@ -72,12 +88,22 @@ export default function App() {
       
       setIsSubmitted(true);
       
-      // Redirect to a new tab (e.g. payment page or success page)
-      window.open('https://app.chatmixo.com/dashboard/pay/n8n', '_blank');
+      // Redirect the opened tab to the payment page
+      if (newWindow) {
+        newWindow.location.href = 'https://app.chatmixo.com/dashboard/pay/n8n';
+      } else {
+        // Fallback if popup was blocked entirely
+        window.location.href = 'https://app.chatmixo.com/dashboard/pay/n8n';
+      }
       
     } catch (error) {
       console.error('Submission error:', error);
       setIsSubmitted(true);
+      if (newWindow) {
+        newWindow.location.href = 'https://app.chatmixo.com/dashboard/pay/n8n';
+      } else {
+        window.location.href = 'https://app.chatmixo.com/dashboard/pay/n8n';
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -204,7 +230,7 @@ export default function App() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#0A0A0B] text-slate-50 font-sans selection:bg-brand-500/30 selection:text-brand-200">
+    <div className="min-h-screen bg-[#0A0A0B] text-slate-50 font-sans selection:bg-brand-500/30 selection:text-brand-200 overflow-x-hidden">
       <div className="sticky top-0 z-[60]">
         {/* Urgency Banner */}
         <div className="bg-brand-500 text-white text-sm font-medium py-2 px-4 shadow-[0_0_15px_rgba(255,109,90,0.5)]">
@@ -256,15 +282,15 @@ export default function App() {
               transition={{ duration: 0.6 }}
               className="flex flex-col space-y-6 lg:space-y-8 lg:col-span-7"
             >
-              <div className="inline-flex items-center space-x-2 bg-brand-500/10 border border-brand-500/20 rounded-full px-4 py-2 w-max shadow-sm">
-                <span className="flex h-2 w-2 rounded-full bg-brand-500 animate-pulse"></span>
-                <span className="text-sm font-medium text-brand-400">Get Your Personal N8N Account</span>
+              <div className="inline-flex items-center space-x-2 bg-brand-500/10 border border-brand-500/20 rounded-full px-4 py-2 w-fit max-w-full shadow-sm">
+                <span className="flex h-2 w-2 rounded-full bg-brand-500 animate-pulse shrink-0"></span>
+                <span className="text-xs sm:text-sm font-medium text-brand-400 truncate">Get Your Personal N8N Account</span>
               </div>
               
-              <h1 className="text-5xl lg:text-7xl font-display font-bold leading-[1.05] tracking-tight">
-                Build Unlimited <br />
+              <h1 className="text-4xl sm:text-5xl lg:text-7xl font-display font-bold leading-[1.1] tracking-tight break-words">
+                Build Unlimited <br className="hidden sm:block" />
                 AI Automations<br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-brand-600">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-brand-600 block mt-2">
                   Without Paying Expensive Monthly Fees
                 </span>
               </h1>
@@ -275,7 +301,7 @@ export default function App() {
 
               <button 
                 onClick={scrollToForm}
-                className="lg:hidden w-full flex items-center justify-center px-8 py-4 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl transition-all shadow-[0_0_40px_-10px_rgba(255,109,90,0.5)] active:scale-95"
+                className="lg:hidden w-full flex items-center justify-center px-4 sm:px-8 py-4 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl transition-all shadow-[0_0_40px_-10px_rgba(255,109,90,0.5)] active:scale-95"
               >
                 <span>Get Access Now</span>
                 <ArrowRight className="w-5 h-5 ml-2" />
@@ -307,7 +333,7 @@ export default function App() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="w-full max-w-md mx-auto lg:col-span-5 lg:ml-auto sticky top-28"
             >
-              <div className="relative bg-[#131316] border border-white/10 rounded-3xl p-8 shadow-2xl overflow-hidden backdrop-blur-xl">
+              <div className="relative bg-[#131316] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl overflow-hidden backdrop-blur-xl w-full">
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-400 to-brand-600" />
                 
                 {!isSubmitted ? (
@@ -322,7 +348,7 @@ export default function App() {
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-4">
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="space-y-2">
                           <label htmlFor="firstName" className="sr-only">First Name</label>
                           <div className="relative">
@@ -371,18 +397,17 @@ export default function App() {
                         </div>
                       </div>
 
-                      <div className="space-y-2">
+                      <div className="space-y-2 w-full">
                         <label htmlFor="phone" className="sr-only">Phone number</label>
                         <div className="relative">
-                          <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
-                          <input
+                          <PhoneInput
+                            international
+                            defaultCountry={defaultCountry}
                             id="phone"
-                            type="tel"
-                            required
                             value={phone}
-                            onChange={(e) => setPhone(e.target.value)}
+                            onChange={setPhone}
                             placeholder="Phone number"
-                            className="w-full pl-11 pr-4 py-3.5 bg-[#0A0A0B] border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500 transition-all text-sm"
+                            className="w-full pl-4 pr-4 py-3.5 bg-[#0A0A0B] border border-white/10 rounded-xl text-white placeholder-slate-500 focus-within:ring-2 focus-within:ring-brand-500/50 focus-within:border-brand-500 transition-all text-sm phone-input-override"
                           />
                         </div>
                       </div>
@@ -390,13 +415,13 @@ export default function App() {
                       <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="group w-full relative flex items-center justify-center px-8 py-4 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl overflow-hidden transition-all hover:-translate-y-0.5 active:scale-95 disabled:opacity-70 disabled:hover:translate-y-0 disabled:cursor-not-allowed mt-2 shadow-[0_0_30px_-10px_rgba(255,109,90,0.4)]"
+                        className="group w-full relative flex items-center justify-center px-4 sm:px-8 py-4 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl overflow-hidden transition-all hover:-translate-y-0.5 active:scale-95 disabled:opacity-70 disabled:hover:translate-y-0 disabled:cursor-not-allowed mt-2 shadow-[0_0_30px_-10px_rgba(255,109,90,0.4)]"
                       >
                         {isSubmitting ? (
                           <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
                         ) : (
                           <span className="flex items-center space-x-2">
-                            <span>Get Access for ₦15,000/mo</span>
+                            <span className="truncate">Get Access for ₦15,000/mo</span>
                             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                           </span>
                         )}

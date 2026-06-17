@@ -14,6 +14,12 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+body {
+  overflow-x: hidden;
+  width: 100%;
 }
 
 /* Custom Scrollbar for the table */
@@ -30,3 +36,25 @@ html {
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.2);
 }
+
+/* Phone input overrides */
+.phone-input-override .PhoneInputInput {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: white;
+  font-size: 0.875rem;
+  width: 100%;
+  min-width: 0;
+}
+.phone-input-override .PhoneInputCountry {
+  margin-right: 0.75rem;
+}
+.phone-input-override .PhoneInputCountrySelect {
+  color: #000;
+}
+.phone-input-override .PhoneInputCountrySelect option {
+  color: #000;
+  background-color: #fff;
+}
+

@@ -481,6 +481,15 @@ export default function App() {
                       </button>
                     </div>
 
+                    <div className="mb-6 space-y-2">
+                      <p className="text-white font-medium text-lg">
+                        Ready to start automating?
+                      </p>
+                      <p className="text-slate-400 text-sm">
+                        Click below to complete your payment and get instant access to your managed workspace.
+                      </p>
+                    </div>
+
                     <a
                       href="https://app.chatmixo.com/dashboard/pay/n8n"
                       target="_blank"

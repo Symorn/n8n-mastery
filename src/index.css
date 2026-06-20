@@ -12,14 +12,14 @@
   --color-brand-900: #421812;
 }
 
-html {
-  scroll-behavior: smooth;
+html, body {
   overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
 }
 
-body {
-  overflow-x: hidden;
-  width: 100%;
+html {
+  scroll-behavior: smooth;
 }
 
 /* Custom Scrollbar for the table */
@@ -44,8 +44,9 @@ body {
   outline: none;
   color: white;
   font-size: 0.875rem;
-  width: 100%;
+  flex: 1;
   min-width: 0;
+  width: auto;
 }
 .phone-input-override .PhoneInputCountry {
   margin-right: 0.75rem;

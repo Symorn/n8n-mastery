@@ -45,23 +45,25 @@ export default function App() {
   };
 
   useEffect(() => {
-    // Detect country by IP using a more reliable endpoint
-    fetch('https://ipinfo.io/json')
+    // Detect country by IP using a reliable endpoint
+    fetch('https://get.geojs.io/v1/ip/geo.json')
       .then((res) => res.json())
       .then((data) => {
-        if (data && data.country) {
-          setDefaultCountry(data.country);
-        } else {
-          // Fallback if ipinfo.io is blocked
-          return fetch('https://get.geojs.io/v1/ip/country.json').then((res) => res.json());
+        if (data && data.country_code) {
+          setDefaultCountry(data.country_code);
         }
       })
-      .then((data) => {
-        if (data && data.country) {
-          setDefaultCountry(data.country);
-        }
-      })
-      .catch((err) => console.log('Error fetching IP', err));
+      .catch((err) => {
+        console.log('Error fetching IP from geojs, falling back', err);
+        fetch('https://ipapi.co/json/')
+          .then((res) => res.json())
+          .then((data) => {
+            if (data && data.country_code) {
+              setDefaultCountry(data.country_code);
+            }
+          })
+          .catch((e) => console.log('Error in fallback IP fetch', e));
+      });
 
     const timer = setInterval(() => {
       setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
@@ -404,9 +406,9 @@ export default function App() {
                         <label htmlFor="phone" className="sr-only">Phone number</label>
                         <div className="relative">
                           <PhoneInput
-                            international
-                            country={defaultCountry}
-                            onCountryChange={setDefaultCountry}
+                            key={defaultCountry}
+                            defaultCountry={defaultCountry}
+                            addInternationalOption={false}
                             id="phone"
                             value={phone}
                             onChange={setPhone}

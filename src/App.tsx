@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import 'react-phone-number-input/style.css';
 import PhoneInput from 'react-phone-number-input';
@@ -18,27 +18,47 @@ import {
   Phone,
   Workflow,
   ChevronDown,
-  Timer
+  Timer,
+  Maximize
 } from 'lucide-react';
 
 export default function App() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState<any>('');
+  const [phone, setPhone] = useState<string | undefined>();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [timeLeft, setTimeLeft] = useState(3600); // 1 hour in seconds
   const [defaultCountry, setDefaultCountry] = useState<any>('US');
+  const videoContainerRef = useRef<HTMLDivElement>(null);
+
+  const toggleFullScreen = () => {
+    if (!document.fullscreenElement) {
+      videoContainerRef.current?.requestFullscreen().catch(err => {
+        console.error(`Error attempting to enable fullscreen: ${err.message}`);
+      });
+    } else {
+      document.exitFullscreen();
+    }
+  };
 
   useEffect(() => {
-    // Detect country by IP
-    fetch('https://ipapi.co/json/')
+    // Detect country by IP using a more reliable endpoint
+    fetch('https://ipinfo.io/json')
       .then((res) => res.json())
       .then((data) => {
-        if (data && data.country_code) {
-          setDefaultCountry(data.country_code);
+        if (data && data.country) {
+          setDefaultCountry(data.country);
+        } else {
+          // Fallback if ipinfo.io is blocked
+          return fetch('https://get.geojs.io/v1/ip/country.json').then((res) => res.json());
+        }
+      })
+      .then((data) => {
+        if (data && data.country) {
+          setDefaultCountry(data.country);
         }
       })
       .catch((err) => console.log('Error fetching IP', err));
@@ -59,9 +79,6 @@ export default function App() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !firstName || !lastName || !phone) return;
-    
-    // Open the new tab immediately to bypass popup blockers
-    const newWindow = window.open('about:blank', '_blank');
     
     setIsSubmitting(true);
     try {
@@ -87,23 +104,9 @@ export default function App() {
       });
       
       setIsSubmitted(true);
-      
-      // Redirect the opened tab to the payment page
-      if (newWindow) {
-        newWindow.location.href = 'https://app.chatmixo.com/dashboard/pay/n8n';
-      } else {
-        // Fallback if popup was blocked entirely
-        window.location.href = 'https://app.chatmixo.com/dashboard/pay/n8n';
-      }
-      
     } catch (error) {
       console.error('Submission error:', error);
       setIsSubmitted(true);
-      if (newWindow) {
-        newWindow.location.href = 'https://app.chatmixo.com/dashboard/pay/n8n';
-      } else {
-        window.location.href = 'https://app.chatmixo.com/dashboard/pay/n8n';
-      }
     } finally {
       setIsSubmitting(false);
     }
@@ -402,7 +405,8 @@ export default function App() {
                         <div className="relative">
                           <PhoneInput
                             international
-                            defaultCountry={defaultCountry}
+                            country={defaultCountry}
+                            onCountryChange={setDefaultCountry}
                             id="phone"
                             value={phone}
                             onChange={setPhone}
@@ -443,17 +447,49 @@ export default function App() {
                   <motion.div 
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="text-center py-8"
+                    className="text-center"
                   >
-                    <div className="w-16 h-16 bg-brand-500/10 text-brand-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_-10px_rgba(255,109,90,0.3)]">
+                    <div className="w-16 h-16 bg-brand-500/10 text-brand-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-[0_0_30px_-10px_rgba(255,109,90,0.3)]">
                       <CheckCircle2 className="w-8 h-8" />
                     </div>
                     <h3 className="text-2xl font-display font-bold text-white mb-2">
-                      Application Received!
+                       You're almost there!
                     </h3>
-                    <p className="text-slate-400">
-                      We've received your details. Please check your inbox for the next steps to access your managed n8n workspace.
+                    <p className="text-slate-300 text-sm mb-4">
+                      Please watch the short walkthrough video below to understand exactly how your managed workspace operates before completing your payment.
                     </p>
+                    
+                    <div 
+                      ref={videoContainerRef}
+                      className="relative w-full rounded-xl overflow-hidden mb-6 bg-slate-900 border border-white/10 aspect-video group"
+                    >
+                      <iframe 
+                        className="absolute inset-0 w-full h-full border-0 pointer-events-auto"
+                        src="https://www.youtube.com/embed/gTfGR-X0j2U?rel=0&controls=0&modestbranding=1" 
+                        title="Walkthrough Video"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" 
+                        allowFullScreen>
+                      </iframe>
+                      <button
+                        onClick={toggleFullScreen}
+                        className="absolute bottom-4 right-4 p-2 bg-black/50 hover:bg-brand-500 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 z-10"
+                        title="Fullscreen"
+                      >
+                        <Maximize className="w-5 h-5" />
+                      </button>
+                    </div>
+
+                    <a
+                      href="https://app.chatmixo.com/dashboard/pay/n8n"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group w-full relative flex items-center justify-center px-4 sm:px-8 py-4 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl overflow-hidden transition-all hover:-translate-y-0.5 active:scale-95 shadow-[0_0_30px_-10px_rgba(255,109,90,0.4)]"
+                    >
+                      <span className="flex items-center space-x-2">
+                        <span className="truncate">Complete Payment (₦15,000/mo)</span>
+                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                      </span>
+                    </a>
                   </motion.div>
                 )}
               </div>

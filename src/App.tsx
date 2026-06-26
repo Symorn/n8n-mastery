@@ -483,7 +483,7 @@ export default function App() {
 
                     <div className="mb-6 space-y-2">
                       <p className="text-white font-medium text-lg">
-                        Ready to start automating?
+                        Ready to start automating at a Low cost?
                       </p>
                       <p className="text-slate-400 text-sm">
                         Click below to complete your payment and get instant access to your managed workspace.
@@ -491,7 +491,7 @@ export default function App() {
                     </div>
 
                     <a
-                      href="https://wa.link/4m5p4u"
+                      href="https://app.chatmixo.com/dashboard/pay/n8n"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="group w-full relative flex items-center justify-center px-4 sm:px-8 py-4 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl overflow-hidden transition-all hover:-translate-y-0.5 active:scale-95 shadow-[0_0_30px_-10px_rgba(255,109,90,0.4)]"
